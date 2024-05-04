@@ -4,6 +4,7 @@ import net.fabricmc.loom.LoomGradleExtension
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import net.fabricmc.loom.api.mappings.layered.MappingsNamespace
 import net.fabricmc.loom.task.RemapJarTask
+import net.fabricmc.loom.task.RemapSourcesJarTask
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.*
@@ -26,11 +27,17 @@ abstract class RemapCheckExtension(private val project: Project) {
         }
 
         project.tasks.apply {
-            create(spec.taskNameBase.get(), RemapJarTask::class) {
+            val baseName = if (spec.taskNameBase.get().isBlank()) {
+                "remapCheck"
+            } else {
+                spec.taskNameBase.get() + "RemapCheck"
+            }
+
+            val remapCheck = create(baseName, RemapJarTask::class) {
                 classpath.from(loomEx.getMinecraftJarsCollection(MappingsNamespace.INTERMEDIARY))
                 dependsOn(target.tasks.named("remapJar"))
 
-                archiveClassifier.set(spec.taskNameBase)
+                archiveClassifier.set(baseName)
 
                 inputFile.set(target.tasks.named("remapJar", RemapJarTask::class).flatMap { it.archiveFile })
                 sourceNamespace.set("intermediary")
@@ -38,6 +45,22 @@ abstract class RemapCheckExtension(private val project: Project) {
 
                 remapperIsolation.set(true)
             }
+
+            val remapCheckSource = create("${baseName}Source", RemapSourcesJarTask::class) {
+                classpath.from(loomEx.getMinecraftJarsCollection(MappingsNamespace.INTERMEDIARY))
+                dependsOn(target.tasks.named("remapSourcesJar"))
+
+                archiveClassifier.set("${baseName}Sources")
+
+                inputFile.set(
+                    target.tasks.named("remapSourcesJar", RemapSourcesJarTask::class).flatMap { it.archiveFile })
+                sourceNamespace.set("intermediary")
+                targetNamespace.set("named")
+
+                remapperIsolation.set(true)
+            }
+
+            named("assemble").configure { dependsOn(remapCheck, remapCheckSource) }
         }
     }
 }

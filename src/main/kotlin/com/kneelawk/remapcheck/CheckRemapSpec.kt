@@ -18,7 +18,7 @@ abstract class CheckRemapSpec {
     abstract val taskNameBase: Property<String>
 
     init {
-        taskNameBase.convention("checkRemap")
+        taskNameBase.convention("")
     }
 
     fun tasknameBase(base: String) {
