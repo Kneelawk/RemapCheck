@@ -63,6 +63,8 @@ abstract class RemapCheckExtension(private val project: Project) {
             }
 
             named("assemble").configure { dependsOn(remapCheck, remapCheckSource) }
+            target.tasks.named("assemble").configure { dependsOn(remapCheck, remapCheckSource) }
+            target.tasks.findByName("publish")?.dependsOn(remapCheck, remapCheckSource)
         }
     }
 }

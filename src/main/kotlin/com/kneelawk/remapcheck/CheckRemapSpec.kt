@@ -15,7 +15,7 @@ abstract class CheckRemapSpec {
         taskNameBase.convention("")
     }
 
-    fun tasknameBase(base: String) {
+    fun taskNameBase(base: String) {
         taskNameBase.set(base)
     }
 }
