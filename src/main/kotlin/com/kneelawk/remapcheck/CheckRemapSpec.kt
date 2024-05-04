@@ -9,12 +9,6 @@ abstract class CheckRemapSpec {
         targetProject.set(target)
     }
 
-    abstract val targetMapping: Property<Any>
-
-    fun targetMapping(target: Any) {
-        targetMapping.set(target)
-    }
-
     abstract val taskNameBase: Property<String>
 
     init {
