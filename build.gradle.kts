@@ -61,11 +61,6 @@ java {
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-        }
-    }
     repositories {
         val publishRepo = System.getenv("PUBLISH_REPO")
         if (publishRepo != null) {
