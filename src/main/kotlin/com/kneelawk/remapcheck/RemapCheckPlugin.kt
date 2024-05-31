@@ -7,7 +7,9 @@ import org.gradle.kotlin.dsl.create
 class RemapCheckPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.extensions.create("remapCheck", RemapCheckExtension::class, project)
-        
-        project.tasks.findByName("genSources")?.setDependsOn(listOf("genSourcesWithVineflower"))
+
+        project.afterEvaluate {
+            project.tasks.findByName("genSources")?.setDependsOn(listOf("genSourcesWithVineflower"))
+        }
     }
 }
