@@ -44,8 +44,6 @@ abstract class RemapCheckExtension(private val project: Project) {
                 inputFile.set(target.tasks.named("remapJar", RemapJarTask::class).flatMap { it.archiveFile })
                 sourceNamespace.set("intermediary")
                 targetNamespace.set("named")
-
-                remapperIsolation.set(true)
             }
 
             val remapCheckSource = create("${baseName}Source", RemapSourcesJarTask::class) {
@@ -58,8 +56,6 @@ abstract class RemapCheckExtension(private val project: Project) {
                     target.tasks.named("remapSourcesJar", RemapSourcesJarTask::class).flatMap { it.archiveFile })
                 sourceNamespace.set("intermediary")
                 targetNamespace.set("named")
-
-                remapperIsolation.set(true)
             }
 
             named("assemble").configure { dependsOn(remapCheck, remapCheckSource) }
